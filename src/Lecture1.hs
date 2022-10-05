@@ -54,7 +54,8 @@ Explanation: @sumOfSquares 3 4@ should be equal to @9 + 16@ and this
 is 25.
 -}
 -- DON'T FORGET TO SPECIFY THE TYPE IN HERE
-sumOfSquares x y = error "TODO!"
+sumOfSquares :: Integer -> Integer -> Integer
+sumOfSquares x y = x^2 + y^2
 
 {- | Implement a function that returns the last digit of a given number.
 
@@ -67,7 +68,11 @@ sumOfSquares x y = error "TODO!"
 
 -}
 -- DON'T FORGET TO SPECIFY THE TYPE IN HERE
-lastDigit n = error "lastDigit: Not implemented!"
+lastDigit :: Integer -> Integer
+lastDigit n = do   
+   if n > 0 
+      then mod n 10 
+   else mod (n * (-1)) 10
 
 {- | Write a function that takes three numbers and returns the
 difference between the biggest number and the smallest one.
@@ -81,7 +86,24 @@ and 1 is the smallest, and 7 - 1 = 6.
 Try to use local variables (either let-in or where) to implement this
 function.
 -}
-minmax x y z = error "TODO"
+minmax :: Integer -> Integer -> Integer -> Integer
+minmax x y z = do
+  if x >= y && x >= z
+    then do
+      if y >= z
+        then x - z
+      else x - y
+  else if y >= x && y >= z
+    then do
+      if x >= z
+        then y - z
+      else y - x
+  -- z >= x && z >= y
+  else do
+    if x >= y
+      then z - y
+    else z - x
+
 
 {- | Implement a function that takes a string, start and end positions
 and returns a substring of a given string from the start position to
@@ -98,7 +120,8 @@ start position can be considered as zero (e.g. substring from the
 first character) and negative end position should result in an empty
 string.
 -}
-subString start end str = error "TODO"
+subString :: Int -> Int -> String -> String 
+subString start end str = take (end - start + 1) ( drop start str )
 
 {- | Write a function that takes a String — space separated numbers,
 and finds a sum of the numbers inside this string.
@@ -108,7 +131,16 @@ and finds a sum of the numbers inside this string.
 
 The string contains only spaces and/or numbers.
 -}
-strSum str = error "TODO"
+strListSum :: [String] -> Int 
+strListSum strList = do
+  if null strList then 0
+  else (read (head strList) :: Int) + strListSum (tail strList)
+
+strSum :: String -> Int 
+strSum str = do
+  let nums = words str
+  if null nums then 0
+  else (read (head nums) :: Int) + strListSum (tail nums)
 
 {- | Write a function that takes a number and a list of numbers and
 returns a string, saying how many elements of the list are strictly
@@ -123,4 +155,24 @@ and lower than 6 elements (4, 5, 6, 7, 8 and 9).
 
 🕯 HINT: Use recursion to implement this function.
 -}
-lowerAndGreater n list = error "TODO"
+
+lowerThan :: Int -> [Int] -> Int
+lowerThan n list = do
+    if null list then 0
+    else if n < (head list)
+      then 1 + lowerThan n (tail list)
+    else 0 + lowerThan n (tail list)
+
+greaterThan :: Int -> [Int] -> Int
+greaterThan n list = do
+    if null list then 0
+    else if n > (head list)
+      then 1 + greaterThan n (tail list)
+    else 0 + greaterThan n (tail list)
+
+lowerAndGreater :: Int -> [Int] -> String
+lowerAndGreater n list = do
+  let lower = lowerThan n list
+  let greater = greaterThan n list
+  show n ++ " is greater than " ++ show greater ++ " elements and lower than " ++ show lower ++ " elements"
+  
